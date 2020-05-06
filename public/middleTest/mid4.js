@@ -16,6 +16,8 @@ function callback(a, b, i) {
     if(b%2 == 0) {
         b = a+1;
         return b;
+    } else {
+        return a;
     }
 }
 
