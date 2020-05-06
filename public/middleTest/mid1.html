@@ -5,49 +5,38 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style>
         div#app {
-            padding: 30px;
             margin: 30px auto;
-            max-width: 300px;
-            border: 1px solid #ccc;
-            box-shadow: 3px 3px 3px #aaa;
-        }
-
-        span {
-            display: inline-block;
-            margin: 5px;
-            padding: 8px 15px;
+            max-width: 80px;
+            height: 80px;
             border: 1px solid black;
-            cursor: pointer;
+            background-color: #ffa;
         }
 
-        div#app>div {
-            margin-top: 20px;
-        }
 
         button {
-            padding: 0.5em 2em;
+            width: 100%;
+            height: 100%;
+            background-color: #ffa;
+            border:none;
+            outline:none;
+            font-size:40px;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <span v-for="i in a"> {{ i }} </span>
-        <div>
-            <button type="button" v-on:click="increase">++</button>
-        </div>
+            <button type="button" v-model="num" v-on:click="increase">{{num}}</button>
     </div>
     <script type="text/javascript"> var app = new Vue({
         el: '#app',
         data: {
-            a: [0, 1, 2, 3, 4]
+            num: 0
         },
         methods: {
             increase() {
-                let b = this.a.slice(0);
-                for (let i = 0; i < b.length; ++i)
-                    b[i] += 1;
-                this.a = b;
+                this.num++;
+                
             }
         }
     })
