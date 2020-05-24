@@ -1,0 +1,89 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script defer src="/__/firebase/7.13.1/firebase-app.js"></script>
+  <script defer src="/__/firebase/7.13.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/init.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="todo1.css">
+  <style>
+    ul {
+      list-style-type: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>할 일</h1>
+    <ul>
+      <li v-for="(todo, index) in todoMap" v-bind:key="index">
+        <input type="checkbox" v-model="checked[index]" />
+        {{ todo.title}} 
+      </li>
+    </ul>
+    <input type="text" v-model.trim="todo.title" />
+    <button type="button" v-on:click="addTodo" v-bind:disabled="!todo.title">할일 추가</button>
+    <button type="button" v-on:click="deleteTodo" v-show="checkedCount > 0">삭제</button>
+  </div>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        checked: [],
+        todo: {},
+        todoMap: {}
+      },
+      computed: {
+        checkedCount: function () {
+
+          let count = 0;
+          var keys = Object.keys(this.checked);
+
+          for(var i = 0; i < keys.length; i++) {
+            if(this.checked[keys[i]])
+              count++;
+          }
+
+          return count;
+        }
+      },
+      methods: {
+        addTodo: function () {
+          axios.post('https://skhu-khj.firebaseio.com/todo11.json', this.todo)
+            .then(response => this.reload());
+          this.todo = "";
+        },
+        deleteTodo: function () {
+          if (confirm("삭제하시겠습니까?") == false) return;
+          
+          var keys = Object.keys(this.checked);
+
+          for(var i = 0; i < keys.length; i++) {
+            if(this.checked[keys[i]]) {
+              axios.delete('https://skhu-khj.firebaseio.com/todo11/' + keys[i] + '.json')
+                  .then(response => this.reload());
+            }
+          }
+
+          this.checked = [];
+        },
+        reload: function () {
+          axios.get('https://skhu-khj.firebaseio.com/todo11.json')
+            .then(response => app.todoMap = response.data)
+
+          console.log(this.todoMap);
+        }
+      }
+    })
+
+    window.onload = function () {
+      app.reload();
+    }
+  </script>
+</body>
+
+</html>
